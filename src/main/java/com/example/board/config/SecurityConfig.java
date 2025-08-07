@@ -33,7 +33,13 @@ public class SecurityConfig {
                 // 사용자 정의 로그인 페이지 사용
                 .formLogin((formLogin) -> formLogin
                         .loginPage("/user/login")
-                        .defaultSuccessUrl("/post/list"));
+                        .defaultSuccessUrl("/post/list"))
+                //로그아웃 설정
+                .logout(logout -> logout
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout")) // 로그아웃 처리 URL
+                        .logoutSuccessUrl("/")     // 로그아웃 성공 후 이동할 URL
+                        .invalidateHttpSession(true) // 세션 무효화
+                );
 
         return http.build();
     }
@@ -42,10 +48,5 @@ public class SecurityConfig {
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
     }
 }
