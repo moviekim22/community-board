@@ -4,6 +4,7 @@ import com.example.board.exception.DataNotFoundException;
 import com.example.board.user.SiteUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,5 +33,13 @@ public class PostService {
         } else {
             throw new DataNotFoundException("post not found");
         }
+    }
+
+    @Transactional // 트랜잭션 시작, 메서드 종료 시 커밋되면서 더티 체킹 발생
+    public void editPost(Long id, String newTitle, String newContent) {
+        Post post = this.postRepository.findById(id).orElseThrow(() -> new DataNotFoundException("Post not found"));
+
+        post.setTitle(newTitle);
+        post.setContent(newContent);
     }
 }

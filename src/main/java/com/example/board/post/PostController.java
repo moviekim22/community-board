@@ -4,6 +4,7 @@ import com.example.board.user.SiteUser;
 import com.example.board.user.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 import java.util.List;
@@ -50,5 +52,36 @@ public class PostController {
         Post post = postService.getPost(id);
         model.addAttribute("post", post);
         return "post_detail";
+    }
+
+    @GetMapping("/edit/{id}")
+    public String edit(@PathVariable("id") Long id, Model model) {
+        Post post = postService.getPost(id);
+
+        PostForm postForm = new PostForm();
+        postForm.setTitle(post.getTitle());
+        postForm.setContent(post.getContent());
+
+        model.addAttribute("postForm", postForm);
+        model.addAttribute("post", post);
+
+        return "post_edit";
+    }
+
+    @PostMapping("/edit/{id}")
+    public String edit(@Valid PostForm postForm, BindingResult bindingResult, @PathVariable("id") Long id, Principal principal) {
+        if (bindingResult.hasErrors()) {
+            return "post_edit";
+        }
+
+        // 현재 로그인한 사용자와 게시글의 작성자가 동일한지 확인
+        Post post = postService.getPost(id);
+        if (!post.getAuthor().getUsername().equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "수정 권한이 없습니다.");
+        }
+
+        postService.editPost(id, postForm.getTitle(), postForm.getContent());
+
+        return String.format("redirect:/post/detail/%s", id);
     }
 }
