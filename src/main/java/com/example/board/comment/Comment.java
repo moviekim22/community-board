@@ -1,37 +1,35 @@
-package com.example.board.post;
+package com.example.board.comment;
 
-import com.example.board.comment.Comment;
+import com.example.board.post.Post;
 import com.example.board.user.SiteUser;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
-public class Post {
+public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String title;
-
+    @NotEmpty(message = "댓글을 입력하세요.")
     @Column(columnDefinition = "TEXT")
     private String content;
-
-    @ManyToOne
-    private SiteUser author;
 
     @CreatedDate
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> commentList;
+    @ManyToOne
+    private Post post;
+
+    @ManyToOne
+    private SiteUser author;
 }

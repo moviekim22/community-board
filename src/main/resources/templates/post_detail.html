@@ -10,22 +10,18 @@
 
 <div th:replace="~{navbar :: navbarFragment}"></div>
 
-<main class="container mt-4">
+<main class="container my-4">
     <h1 class="mb-3" th:text="${post.title}">게시글 제목</h1>
-
     <div class="mb-3">
         <strong th:text="${post.author.username}">작성자</strong>
         <span class="text-muted ms-2" th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}">2025-08-07 18:00</span>
     </div>
-
     <hr>
-
     <div class="card my-4">
         <div class="card-body">
             <p class="card-text" style="white-space: pre-line;" th:text="${post.content}">게시글 내용이 여기에 표시됩니다.</p>
         </div>
     </div>
-
     <div class="d-flex justify-content-end">
         <div th:if="${#authentication.name == post.author.username}">
             <a th:href="@{|/post/edit/${post.id}|}" class="btn btn-warning me-2">수정</a>
@@ -33,6 +29,38 @@
         </div>
         <a th:href="@{/post/list}" class="btn btn-secondary ms-2">목록</a>
     </div>
+
+    <hr class="my-4">
+
+    <h5 class="mb-3" th:text="|${#lists.size(post.commentList)}개의 댓글|"></h5>
+    <div class="list-group">
+        <div class="list-group-item" th:each="comment : ${post.commentList}">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <strong th:text="${comment.author.username}">댓글 작성자</strong>
+                    <small class="text-muted ms-2" th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}"></small>
+                </div>
+            </div>
+            <p class="mt-2 mb-1" th:text="${comment.content}"></p>
+        </div>
+        <div class="list-group-item" th:if="${#lists.isEmpty(post.commentList)}">
+            <p class="text-center mb-0">등록된 댓글이 없습니다.</p>
+        </div>
+    </div>
+
+    <div class="card my-4" sec:authorize="isAuthenticated()"> <div class="card-body">
+        <h5 class="card-title mb-3">댓글 남기기</h5>
+        <form th:action="@{|/comment/create/${post.id}|}" method="post">
+            <div class="mb-3">
+                <textarea name="content" class="form-control" rows="3" placeholder="댓글 내용을 입력하세요."></textarea>
+            </div>
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary">등록</button>
+            </div>
+        </form>
+    </div>
+    </div>
+
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

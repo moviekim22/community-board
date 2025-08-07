@@ -21,7 +21,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
                 // 로그인, 회원가입 페이지는 인증 없이 접근 가능
-                .requestMatchers("/", "/post/list", "/user/login", "/user/signup", "/h2-console/**").permitAll()
+                .requestMatchers("/", "/post/list", "/user/login", "/user/signup", "/h2-console/**", "/post/detail/**").permitAll()
                 // 그 외 모든 요청은 인증 필요
                 .anyRequest().authenticated())
                 // "/h2-console/**"요청은 CSRF 보호를 적용하지 않음
