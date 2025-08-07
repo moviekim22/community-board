@@ -16,20 +16,20 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/signup")
-    public String signup(UserCreateForm userCreateForm){
+    public String signup(UserCreateForm userCreateForm) {
         return "signup";
     }
 
     @PostMapping("/signup")
-    public String signup(@Valid UserCreateForm userCreateForm, BindingResult bindingResult){
+    public String signup(@Valid UserCreateForm userCreateForm, BindingResult bindingResult) {
 
         //회원가입폼대로 작성했는지 확인
-        if(bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             return "signup";
         }
 
         //2개의 비밀번호 일치하는지 확인
-        if(!userCreateForm.getPassword1().equals(userCreateForm.getPassword2())){
+        if (!userCreateForm.getPassword1().equals(userCreateForm.getPassword2())) {
             bindingResult.rejectValue("password2", "passwordInCorrect", "2개의 비밀번호가 일치하지 않습니다.");
             return "signup";
         }
@@ -46,7 +46,7 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public String login() {
+    public String login(){
         return "login";
     }
 }
