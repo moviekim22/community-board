@@ -84,4 +84,17 @@ public class PostController {
 
         return String.format("redirect:/post/detail/%s", id);
     }
+
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable("id") Long id, Principal principal) {
+        // 현재 로그인한 사용자와 게시글의 작성자가 동일한지 확인
+        Post post = postService.getPost(id);
+        if (!post.getAuthor().getUsername().equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "삭제 권한이 없습니다.");
+        }
+
+        postService.deletePost(post);
+
+        return "redirect:/post/list";
+    }
 }

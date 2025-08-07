@@ -42,4 +42,8 @@ public class PostService {
         post.setTitle(newTitle);
         post.setContent(newContent);
     }
+
+    public void deletePost(Post post) {
+        postRepository.delete(post);
+    }
 }
