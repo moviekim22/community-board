@@ -3,10 +3,12 @@ package com.example.board.post;
 import com.example.board.exception.DataNotFoundException;
 import com.example.board.user.SiteUser;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -22,8 +24,9 @@ public class PostService {
         postRepository.save(post);
     }
 
-    public List<Post> getList() {
-        return postRepository.findAll();
+    public Page<Post> getList(int page) {
+        Pageable pageable = PageRequest.of(page, 10);
+        return postRepository.findAll(pageable);
     }
 
     public Post getPost(Long id) {

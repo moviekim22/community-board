@@ -23,11 +23,7 @@ public class UserService {
     }
 
     public SiteUser getUser(String username) {
-        Optional<SiteUser> siteUser = this.userRepository.findByUsername(username);
-        if (siteUser.isPresent()) {
-            return siteUser.get();
-        } else {
-            throw new DataNotFoundException("사이트 유저 찾을 수 없음.");
-        }
+        return this.userRepository.findByUsername(username)
+                .orElseThrow(() -> new DataNotFoundException("사이트 유저를 찾을 수 없음."));
     }
 }
