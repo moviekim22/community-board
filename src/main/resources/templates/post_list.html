@@ -25,7 +25,7 @@
         <tr th:each="post, loop: ${paging}">
             <td th:text="${paging.totalElements - (paging.number * paging.size) - loop.index}"></td>
             <td class="text-start">
-                <a th:href="@{|/post/detail/${post.id}|}" th:text="${post.title}" class="text-decoration-none text-dark">게시글 제목입니다.</a>
+                <a th:href="@{|/post/detail/${post.id}|}" th:text="${post.title} + ' [' + ${#lists.size(post.commentList)} + ']'" class="text-decoration-none text-dark">게시글 제목입니다.</a>
             </td>
             <td th:text="${post.author.username}">작성자 이름</td>
             <td th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd')}"></td>
