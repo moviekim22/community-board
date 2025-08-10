@@ -22,13 +22,13 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="post : ${paging}">
-            <td th:text="${post.id}">1</td>
+        <tr th:each="post, loop: ${paging}">
+            <td th:text="${paging.totalElements - (paging.number * paging.size) - loop.index}"></td>
             <td class="text-start">
                 <a th:href="@{|/post/detail/${post.id}|}" th:text="${post.title}" class="text-decoration-none text-dark">게시글 제목입니다.</a>
             </td>
             <td th:text="${post.author.username}">작성자 이름</td>
-            <td th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd')}">2025-08-07</td>
+            <td th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd')}"></td>
         </tr>
         <tr th:if="${paging.isEmpty()}">
             <td colspan="4">등록된 게시글이 없습니다.</td>
